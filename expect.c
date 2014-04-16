@@ -1860,19 +1860,11 @@ expRead(
     if (cc == EXP_DATA_NEW) {
 	/* try to read it */
 	cc = expIRead(interp,esPtr,timeout,tcl_set_flags);
-	
-	/* the meaning of 0 from i_read means eof.  Muck with it a */
-	/* little, so that from now on it means "no new data arrived */
-	/* but it should be looked at again anyway". */
-	if (cc == 0) {
+
+	if (Tcl_Eof(esPtr->channel)) {
 	    cc = EXP_EOF;
-	} else if (cc > 0) {
-	    /* successfully read data */
-	} else {
-	    /* failed to read data - some sort of error was encountered such as
-	     * an interrupt with that forced an error return
-	     */
 	}
+
     } else if (cc == EXP_DATA_OLD) {
 	cc = 0;
     } else if (cc == EXP_RECONFIGURE) {
